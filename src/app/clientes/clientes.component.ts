@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ApiService } from '../api.service';
+import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-clientes',
@@ -15,15 +16,14 @@ export class ClientesComponent implements OnInit {
   selectedCliente: any = { id: '', nome: '', cpf: '', telefone: '', endereco: '' };
   selectedClienteVoid: any = { id: '', nome: '', cpf: '', telefone: '', endereco: '' };
 
-
-  constructor(private apiService: ApiService, private formBuilder: FormBuilder) {
+  constructor(private apiService: ApiService, private formBuilder: FormBuilder, private appComponent: AppComponent) {
     this.clienteForm = this.formBuilder.group({
       id: [''],
       nome: [''],
       cpf: [''],
       telefone: [''],
       endereco: [''],
-    })
+    });
   }
 
   ngOnInit(): void {
@@ -38,15 +38,28 @@ export class ClientesComponent implements OnInit {
 
   createOrUpdateCliente(): void {
     console.log(this.clienteForm);
-    if(this.selectedCliente && this.selectedCliente.id) {
-      this.apiService.updateCliente(this.clienteForm.value.id, this.clienteForm.value).subscribe(() => {
-        this.getClientes();
-      });
+    if (this.selectedCliente && this.selectedCliente.id) {
+      this.apiService.updateCliente(this.clienteForm.value.id, this.clienteForm.value).subscribe(
+        () => {
+          this.appComponent.showSuccess('Cliente atualizado com sucesso.');
+          this.getClientes();
+        },
+        (error) => {
+          this.appComponent.showError('Erro ao atualizar o cliente. Verifique se o ID já existe.');
+        }
+      );
     } else {
-      this.apiService.createCliente(this.clienteForm.value).subscribe(() => {
-        this.getClientes();
-      });
+      this.apiService.createCliente(this.clienteForm.value).subscribe(
+        () => {
+          this.appComponent.showSuccess('Cliente criado com sucesso.');
+          this.getClientes();
+        },
+        (error) => {
+          this.appComponent.showError('Erro ao criar o cliente. Verifique se o ID já existe.');
+        }
+      );
     }
+    this.clearForm();
   }
 
   selectCliente(cliente: any): void {
@@ -62,9 +75,15 @@ export class ClientesComponent implements OnInit {
   }
 
   deleteCliente(id: any): void {
-    this.apiService.deleteCliente(id).subscribe(() => {
-      this.getClientes();
-    });
+    this.apiService.deleteCliente(id).subscribe(
+      () => {
+        this.appComponent.showSuccess('Cliente excluído com sucesso.');
+        this.getClientes();
+      },
+      (error) => {
+        this.appComponent.showError('Erro ao excluir o cliente.');
+      }
+    );
     this.clearForm();
   }
 

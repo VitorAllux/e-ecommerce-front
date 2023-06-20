@@ -1,1 +1,70 @@
-<p>vendas works!</p>
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <i class="fas fa-shopping-cart mr-2"></i> Vendas
+    </a>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-lg-8 offset-lg-2">
+      <form [formGroup]="vendaForm" (ngSubmit)="createOrUpdateVenda()" class="mb-4">
+        <div class="form-group">
+          <label for="cliente_id">CPF do Cliente</label>
+          <input type="text" id="cliente_id" name="cliente_id" class="form-control" formControlName="cliente_id" required>
+        </div>
+
+        <div class="form-group">
+          <label for="produto_id">Código do Produto</label>
+          <input type="text" id="produto_id" name="produto_id" class="form-control" formControlName="produto_id" required>
+        </div>
+
+        <div class="form-group">
+          <label for="quantidade">Quantidade</label>
+          <input type="number" id="quantidade" name="quantidade" class="form-control" formControlName="quantidade" required>
+        </div>
+
+        <div class="form-group">
+          <label for="valor">Valor</label>
+          <input type="number" id="valor" name="valor" class="form-control" formControlName="valor" required>
+        </div>
+
+        <div class="text-right">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-2"></i> Salvar</button>
+          <button type="button" class="btn btn-warning ml-2" (click)="clearForm()"><i class="fas fa-times mr-2"></i> Limpar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-10 offset-lg-1">
+      <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th>Número Identificador</th>
+            <th>CPF do Cliente</th>
+            <th>Código do Produto</th>
+            <th>Quantidade</th>
+            <th>Valor</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let venda of vendas">
+            <td>{{ venda.id }}</td>
+            <td>{{ venda.cliente_id }}</td>
+            <td>{{ venda.produto_id }}</td>
+            <td>{{ venda.quantidade }}</td>
+            <td>{{ venda.valor }}</td>
+            <td>
+              <button type="button" class="btn btn-secondary btn-sm" (click)="selectVenda(venda)"><i class="fas fa-edit"></i></button>
+              <button type="button" class="btn btn-danger btn-sm" (click)="deleteVenda(venda.id)"><i class="fas fa-trash-alt"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

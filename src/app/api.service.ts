@@ -55,7 +55,7 @@ export class ApiService {
 
   //sells
   getVendas(): Observable<any> {
-    return this.http.get(`${this.baseURL}/Vendas`);
+    return this.http.get(`${this.baseURL}/vendas`);
   }
 
   getVenda(id: number): Observable<any> {
