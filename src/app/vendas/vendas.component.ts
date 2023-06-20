@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ApiService } from '../api.service';
+import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-vendas',
@@ -15,7 +16,7 @@ export class VendasComponent implements OnInit {
   selectedVenda: any = { id: '', cliente_id: '', produto_id: '', quantidade: '', valor: '' };
   selectedVendaVoid: any = { id: '', cliente_id: '', produto_id: '', quantidade: '', valor: '' };
 
-  constructor(private apiService: ApiService, private formBuilder: FormBuilder) {
+  constructor(private apiService: ApiService, private formBuilder: FormBuilder, private appComponent: AppComponent) {
     this.vendaForm = this.formBuilder.group({
       id: [''],
       cliente_id: [''],
@@ -38,13 +39,25 @@ export class VendasComponent implements OnInit {
   createOrUpdateVenda(): void {
     console.log(this.vendaForm);
     if (this.selectedVenda && this.selectedVenda.id) {
-      this.apiService.updateVenda(this.vendaForm.value.id, this.vendaForm.value).subscribe(() => {
-        this.getVendas();
-      });
+      this.apiService.updateVenda(this.vendaForm.value.id, this.vendaForm.value).subscribe(
+        () => {
+          this.appComponent.showSuccess('Venda atualizada com sucesso.');
+          this.getVendas();
+        },
+        (error) => {
+          this.appComponent.showError('Erro ao atualizar a venda. Verifique se o ID já existe.');
+        }
+      );
     } else {
-      this.apiService.createVenda(this.vendaForm.value).subscribe(() => {
-        this.getVendas();
-      });
+      this.apiService.createVenda(this.vendaForm.value).subscribe(
+        () => {
+          this.appComponent.showSuccess('Venda criada com sucesso.');
+          this.getVendas();
+        },
+        (error) => {
+          this.appComponent.showError('Erro ao criar a venda. Verifique se o ID já existe.');
+        }
+      );
     }
     this.clearForm();
   }
@@ -62,9 +75,15 @@ export class VendasComponent implements OnInit {
   }
 
   deleteVenda(id: any): void {
-    this.apiService.deleteVenda(id).subscribe(() => {
-      this.getVendas();
-    });
+    this.apiService.deleteVenda(id).subscribe(
+      () => {
+        this.appComponent.showSuccess('Venda excluída com sucesso.');
+        this.getVendas();
+      },
+      (error) => {
+        this.appComponent.showError('Erro ao excluir a venda.');
+      }
+    );
     this.clearForm();
   }
 

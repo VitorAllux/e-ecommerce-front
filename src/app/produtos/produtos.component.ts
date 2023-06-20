@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ApiService } from '../api.service';
+import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-produtos',
@@ -15,7 +16,7 @@ export class ProdutosComponent implements OnInit {
   selectedProduto: any = { id: '', descricao: '', valor: '', quantidade: '' };
   selectedProdutoVoid: any = { id: '', descricao: '', valor: '', quantidade: '' };
 
-  constructor(private apiService: ApiService, private formBuilder: FormBuilder) {
+  constructor(private apiService: ApiService, private formBuilder: FormBuilder, private appComponent: AppComponent) {
     this.produtoForm = this.formBuilder.group({
       id: [''],
       descricao: [''],
@@ -37,13 +38,25 @@ export class ProdutosComponent implements OnInit {
   createOrUpdateProduto(): void {
     console.log(this.produtoForm);
     if (this.selectedProduto && this.selectedProduto.id) {
-      this.apiService.updateProduto(this.produtoForm.value.id, this.produtoForm.value).subscribe(() => {
-        this.getProdutos();
-      });
+      this.apiService.updateProduto(this.produtoForm.value.id, this.produtoForm.value).subscribe(
+        () => {
+          this.appComponent.showSuccess('Produto atualizado com sucesso.');
+          this.getProdutos();
+        },
+        (error) => {
+          this.appComponent.showError('Erro ao atualizar o produto. Verifique se o ID já existe.');
+        }
+      );
     } else {
-      this.apiService.createProduto(this.produtoForm.value).subscribe(() => {
-        this.getProdutos();
-      });
+      this.apiService.createProduto(this.produtoForm.value).subscribe(
+        () => {
+          this.appComponent.showSuccess('Produto criado com sucesso.');
+          this.getProdutos();
+        },
+        (error) => {
+          this.appComponent.showError('Erro ao criar o produto. Verifique se o ID já existe.');
+        }
+      );
     }
     this.clearForm();
   }
@@ -60,9 +73,15 @@ export class ProdutosComponent implements OnInit {
   }
 
   deleteProduto(id: any): void {
-    this.apiService.deleteProduto(id).subscribe(() => {
-      this.getProdutos();
-    });
+    this.apiService.deleteProduto(id).subscribe(
+      () => {
+        this.appComponent.showSuccess('Produto excluído com sucesso.');
+        this.getProdutos();
+      },
+      (error) => {
+        this.appComponent.showError('Erro ao excluir o produto.');
+      }
+    );
     this.clearForm();
   }
 
