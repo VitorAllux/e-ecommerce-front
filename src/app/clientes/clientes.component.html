@@ -7,6 +7,21 @@
 </nav>
 
 <div class="container mt-5">
+  <div class="jumbotron bg-light">
+    <h4>Filtros:</h4>
+    <div class="row">
+      <div class="col-lg-3 mb-3">
+        <label for="filter_cliente_nome" class="form-label">Digite o nome do cliente:</label>
+        <input type="text " class="form-control" id="filter_cliente_nome" [(ngModel)]="filtro.cliente_nome">
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-lg-8 offset-lg-2">
+        <button type="button" class="btn btn-success" (click)="getClientes()">Filtrar</button>
+        <button type="button" class="btn btn-secondary" (click)="limparFiltros()">Limpar Filtros</button>
+      </div>
+    </div>
+  </div>
   <div class="row">
     <div class="col-lg-8 offset-lg-2">
       <form [formGroup]="clienteForm" (ngSubmit)="createOrUpdateCliente()" class="mb-4">
@@ -32,7 +47,8 @@
 
         <div class="text-right">
           <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-2"></i> Salvar</button>
-          <button type="button" class="btn btn-warning ml-2" (click)="clearForm()"><i class="fas fa-times mr-2"></i> Limpar</button>
+          <button type="button" class="btn btn-warning ml-2" (click)="clearForm()"><i class="fas fa-times mr-2"></i>
+            Limpar</button>
         </div>
       </form>
     </div>
@@ -59,8 +75,10 @@
             <td>{{ cliente.telefone }}</td>
             <td>{{ cliente.endereco }}</td>
             <td>
-              <button type="button" class="btn btn-secondary btn-sm" (click)="selectCliente(cliente)"><i class="fas fa-edit"></i></button>
-              <button type="button" class="btn btn-danger btn-sm ml-2" (click)="deleteCliente(cliente.id)"><i class="fas fa-trash-alt"></i></button>
+              <button type="button" class="btn btn-secondary btn-sm" (click)="selectCliente(cliente)"><i
+                  class="fas fa-edit"></i></button>
+              <button type="button" class="btn btn-danger btn-sm ml-2" (click)="deleteCliente(cliente.id)"><i
+                  class="fas fa-trash-alt"></i></button>
             </td>
           </tr>
         </tbody>

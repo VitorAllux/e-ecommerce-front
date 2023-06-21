@@ -20,7 +20,7 @@
         </select>
       </div>
       <div class="col-lg-3 mb-3">
-        <label for="filter_cliente" class="form-label">Selecione um produto</label>
+        <label for="filter_cliente" class="form-label">Selecione um cliente</label>
         <select class="form-select" id="filter_cliente" [(ngModel)]="filtro.cliente_id">
           <option value="null" disabled></option>
           <option *ngFor="let cliente of clientes" [ngValue]="cliente.id">

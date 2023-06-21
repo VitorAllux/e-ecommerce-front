@@ -13,6 +13,7 @@ export class ProdutosComponent implements OnInit {
 
   produtos: any;
   produtoForm: FormGroup;
+  filtro: any = { produto_descricao: null }
   selectedProduto: any = { id: '', descricao: '', valor: '', quantidade: '' };
   selectedProdutoVoid: any = { id: '', descricao: '', valor: '', quantidade: '' };
 
@@ -31,6 +32,10 @@ export class ProdutosComponent implements OnInit {
 
   getProdutos(): void {
     this.apiService.getProdutos().subscribe((data) => {
+      if (this.filtro.produto_descricao) {
+        data = data.filter((produto: { descricao: any; }) => this.compareStrings(produto.descricao, this.filtro.produto_descricao))
+      }
+
       this.produtos = data;
     });
   }
@@ -87,6 +92,22 @@ export class ProdutosComponent implements OnInit {
 
   clearForm(): void {
     this.produtoForm.reset();
+  }
+
+  unacentLowerCase(string: string): string {
+    return string.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  }
+
+  compareStrings(produtoNome: string = '', filtroString: string = ''): boolean {
+    console.log(this.unacentLowerCase(produtoNome));
+    console.log(this.unacentLowerCase(filtroString));
+
+    return this.unacentLowerCase(produtoNome).includes(this.unacentLowerCase(filtroString));
+  }
+
+  limparFiltros(): void {
+    this.filtro.produto_descricao = null;
+    this.getProdutos();
   }
 
 }

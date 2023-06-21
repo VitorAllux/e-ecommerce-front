@@ -13,6 +13,7 @@ export class ClientesComponent implements OnInit {
 
   clientes: any;
   clienteForm: FormGroup;
+  filtro: any = { cliente_nome: null }
   selectedCliente: any = { id: '', nome: '', cpf: '', telefone: '', endereco: '' };
   selectedClienteVoid: any = { id: '', nome: '', cpf: '', telefone: '', endereco: '' };
 
@@ -32,6 +33,9 @@ export class ClientesComponent implements OnInit {
 
   getClientes(): void {
     this.apiService.getClientes().subscribe((data) => {
+      if (this.filtro.cliente_nome) {
+        data = data.filter((cliente: { nome: any; }) => this.compareStrings(cliente.nome, this.filtro.cliente_nome))
+      }
       this.clientes = data;
     });
   }
@@ -89,6 +93,22 @@ export class ClientesComponent implements OnInit {
 
   clearForm(): void {
     this.clienteForm.reset();
+  }
+
+  unacentLowerCase(string: string): string {
+    return string.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  }
+
+  compareStrings(produtoNome: string = '', filtroString: string = ''): boolean {
+    console.log(this.unacentLowerCase(produtoNome));
+    console.log(this.unacentLowerCase(filtroString));
+
+    return this.unacentLowerCase(produtoNome).includes(this.unacentLowerCase(filtroString));
+  }
+
+  limparFiltros(): void {
+    this.filtro.cliente_nome = null;
+    this.getClientes();
   }
 
 }

@@ -7,6 +7,21 @@
 </nav>
 
 <div class="container mt-5">
+  <div class="jumbotron bg-light">
+    <h4>Filtros:</h4>
+    <div class="row">
+      <div class="col-lg-3 mb-3">
+        <label for="filter_produto_descricao" class="form-label">Digite o nome do produto:</label>
+        <input type="text " class="form-control" id="filter_produto_descricao" [(ngModel)]="filtro.produto_descricao">
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-lg-8 offset-lg-2">
+        <button type="button" class="btn btn-success" (click)="getProdutos()">Filtrar</button>
+        <button type="button" class="btn btn-secondary" (click)="limparFiltros()">Limpar Filtros</button>
+      </div>
+    </div>
+  </div>
   <div class="row">
     <div class="col-lg-8 offset-lg-2">
       <form [formGroup]="produtoForm" (ngSubmit)="createOrUpdateProduto()" class="mb-4">
@@ -22,12 +37,14 @@
 
         <div class="form-group">
           <label for="quantidade">Quantidade em Estoque</label>
-          <input type="number" id="quantidade" name="quantidade" class="form-control" formControlName="quantidade" required>
+          <input type="number" id="quantidade" name="quantidade" class="form-control" formControlName="quantidade"
+            required>
         </div>
 
         <div class="text-right">
           <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-2"></i> Salvar</button>
-          <button type="button" class="btn btn-warning ml-2" (click)="clearForm()"><i class="fas fa-times mr-2"></i> Limpar</button>
+          <button type="button" class="btn btn-warning ml-2" (click)="clearForm()"><i class="fas fa-times mr-2"></i>
+            Limpar</button>
         </div>
       </form>
     </div>
@@ -52,8 +69,10 @@
             <td>{{ produto.valor }}</td>
             <td>{{ produto.quantidade }}</td>
             <td>
-              <button type="button" class="btn btn-secondary btn-sm" (click)="selectProduto(produto)"><i class="fas fa-edit"></i></button>
-              <button type="button" class="btn btn-danger btn-sm ml-2" (click)="deleteProduto(produto.id)"><i class="fas fa-trash-alt"></i></button>
+              <button type="button" class="btn btn-secondary btn-sm" (click)="selectProduto(produto)"><i
+                  class="fas fa-edit"></i></button>
+              <button type="button" class="btn btn-danger btn-sm ml-2" (click)="deleteProduto(produto.id)"><i
+                  class="fas fa-trash-alt"></i></button>
             </td>
           </tr>
         </tbody>
