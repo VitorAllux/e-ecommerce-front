@@ -28,8 +28,7 @@
           </option>
         </select>
       </div>
-      <div class="col-lg-6 mt-3">
-        <label for="filter_periodo" class="form-label">Período de venda:</label>
+      <div class="col-lg-6 mt-3" style="margin-top: 0 !important;">
         <div class="row">
           <div class="col-lg-6">
             <label for="filter_periodo_de" class="form-label">Maior ou igual:</label>
@@ -107,16 +106,18 @@
             <th>ID do Produto</th>
             <th>Quantidade</th>
             <th>Valor</th>
+            <th>Data</th>
             <th>Ações</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let venda of vendas">
             <td>{{ venda.id }}</td>
-            <td>{{ venda.cliente_id }}</td>
-            <td>{{ venda.produto_id }}</td>
+            <td>{{  buscaCliente(venda.cliente_id) }}</td>
+            <td>{{ buscaProduto(venda.produto_id)  }}</td>
             <td>{{ venda.quantidade }}</td>
             <td>{{ venda.valor }}</td>
+            <td>{{ venda.created_at | date:'short' }}</td>
             <td>
               <button type="button" class="btn btn-secondary btn-sm" (click)="selectVenda(venda)">
                 <i class="fas fa-edit"></i>

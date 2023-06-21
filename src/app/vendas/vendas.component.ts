@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ApiService } from '../api.service';
 import { AppComponent } from '../app.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-vendas',
@@ -22,7 +23,7 @@ export class VendasComponent implements OnInit {
   selectedVenda: any = { id: '', cliente_id: '', produto_id: '', quantidade: '', valor: '' };
   selectedVendaVoid: any = { id: '', cliente_id: '', produto_id: '', quantidade: '', valor: '' };
 
-  constructor(private apiService: ApiService, private formBuilder: FormBuilder, private appComponent: AppComponent) {
+  constructor(private apiService: ApiService, private formBuilder: FormBuilder, private appComponent: AppComponent, private toastr: ToastrService) {
     this.vendaForm = this.formBuilder.group({
       id: [''],
       cliente_id: [''],
@@ -40,6 +41,14 @@ export class VendasComponent implements OnInit {
     this.apiService.getClientes().subscribe((data) => {
       this.clientes = data;
     });
+  }
+
+  buscaCliente(id:number ): string{
+    return this?.clientes?.find((cliente: { id: any; }) => cliente.id === id).nome
+  }
+
+  buscaProduto(id:number ): string{
+    return this?.produtos?.find((produto: { id: any; }) => produto.id === id).descricao
   }
 
   ngOnInit(): void {
@@ -82,15 +91,20 @@ export class VendasComponent implements OnInit {
         }
       );
     } else {
-      this.apiService.createVenda(this.vendaForm.value).subscribe(
-        () => {
-          this.appComponent.showSuccess('Venda criada com sucesso.');
-          this.getVendas();
-        },
-        (error) => {
-          this.appComponent.showError('Erro ao criar a venda. Verifique se o ID já existe.');
-        }
-      );
+      if(this.temEstoque()){
+        this.apiService.createVenda(this.vendaForm.value).subscribe(
+          () => {
+            this.appComponent.showSuccess('Venda criada com sucesso.');
+            this.getVendas();
+          },
+          (error) => {
+            this.appComponent.showError('Erro ao criar a venda. Verifique se o ID já existe.');
+          }
+        );
+      } else {
+        this.toastr.error("O estoque do produto é menor que o solicitado")
+      }
+
     }
     this.clearForm();
   }
@@ -131,14 +145,26 @@ export class VendasComponent implements OnInit {
     this.getVendas();
   }
 
+  temEstoque(): boolean{
+    if(this.vendaForm.value.quantidade){
+      let produto = this.produtos.find((prod: { id: any; }) => prod.id === this.vendaForm.value.produto_id)
+    
+      if(produto){
+        return produto.quantidade >= this.vendaForm.value.quantidade
+      }
+    }
+    return false
+  }
+
   calculaValor(){
     if(this.vendaForm.value.produto_id && this.vendaForm.value.quantidade){
       let produto = this.produtos.find((prod: { id: any; }) => prod.id === this.vendaForm.value.produto_id)
     
       if(produto){
         this.vendaForm.value.valor = (this.vendaForm.value.quantidade * produto.valor);
-        console.log(this.vendaForm.value.valor);
       }
     }
   }
 }
+
+
