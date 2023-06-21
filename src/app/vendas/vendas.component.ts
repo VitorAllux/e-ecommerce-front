@@ -35,7 +35,6 @@ export class VendasComponent implements OnInit {
   private carregaRecursos(): void {
     this.apiService.getProdutos().subscribe((data) => {
       this.produtos = data;
-      console.log("teste", data)
     });
 
     this.apiService.getClientes().subscribe((data) => {

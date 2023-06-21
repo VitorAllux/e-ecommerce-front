@@ -99,9 +99,6 @@ export class ProdutosComponent implements OnInit {
   }
 
   compareStrings(produtoNome: string = '', filtroString: string = ''): boolean {
-    console.log(this.unacentLowerCase(produtoNome));
-    console.log(this.unacentLowerCase(filtroString));
-
     return this.unacentLowerCase(produtoNome).includes(this.unacentLowerCase(filtroString));
   }
 
