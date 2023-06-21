@@ -7,32 +7,81 @@
 </nav>
 
 <div class="container mt-5">
-  <div class="row">
+  <div class="jumbotron bg-light">
+    <h4>Filtros:</h4>
+    <div class="row">
+      <div class="col-lg-3 mb-3">
+        <label for="filter_produto" class="form-label">Selecione um produto</label>
+        <select class="form-select" id="filter_produto" [(ngModel)]="filtro.produto_id">
+          <option value="null" disabled></option>
+          <option *ngFor="let produto of produtos" [ngValue]="produto.id">
+            {{ produto.descricao }}
+          </option>
+        </select>
+      </div>
+      <div class="col-lg-3 mb-3">
+        <label for="filter_cliente" class="form-label">Selecione um produto</label>
+        <select class="form-select" id="filter_cliente" [(ngModel)]="filtro.cliente_id">
+          <option value="null" disabled></option>
+          <option *ngFor="let cliente of clientes" [ngValue]="cliente.id">
+            {{ cliente.nome }}
+          </option>
+        </select>
+      </div>
+      <div class="col-lg-6 mt-3">
+        <label for="filter_periodo" class="form-label">Período de venda:</label>
+        <div class="row">
+          <div class="col-lg-6">
+            <label for="filter_periodo_de" class="form-label">Maior ou igual:</label>
+            <input type="date" class="form-control" [(ngModel)]="filtro.periodoVenda.maiorIgual" />
+          </div>
+          <div class="col-lg-6">
+            <label for="filter_periodo_ate" class="form-label">Menor ou igual:</label>
+            <input type="date" class="form-control" [(ngModel)]="filtro.periodoVenda.menorIgual" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-lg-8 offset-lg-2">
+        <button type="button" class="btn btn-success" (click)="getVendas()">Filtrar</button>
+        <button type="button" class="btn btn-secondary" (click)="limparFiltros()">Limpar Filtros</button>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
     <div class="col-lg-8 offset-lg-2">
       <form [formGroup]="vendaForm" (ngSubmit)="createOrUpdateVenda()" class="mb-4">
         <div class="form-group">
           <label for="cliente_id">ID do Cliente</label>
-          <input type="text" id="cliente_id" name="cliente_id" class="form-control" formControlName="cliente_id" required>
+          <input type="text" id="cliente_id" name="cliente_id" class="form-control" formControlName="cliente_id"
+            required />
         </div>
 
         <div class="form-group">
           <label for="produto_id">ID do Produto</label>
-          <input type="text" id="produto_id" name="produto_id" class="form-control" formControlName="produto_id" required>
+          <input type="text" id="produto_id" name="produto_id" class="form-control" formControlName="produto_id"
+            required />
         </div>
 
         <div class="form-group">
           <label for="quantidade">Quantidade</label>
-          <input type="number" id="quantidade" name="quantidade" class="form-control" formControlName="quantidade" required>
+          <input type="number" id="quantidade" name="quantidade" class="form-control" formControlName="quantidade"
+            required />
         </div>
 
         <div class="form-group">
           <label for="valor">Valor</label>
-          <input type="number" id="valor" name="valor" class="form-control" formControlName="valor" required>
+          <input type="number" id="valor" name="valor" class="form-control" formControlName="valor" required />
         </div>
 
         <div class="text-right">
-          <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-2"></i> Salvar</button>
-          <button type="button" class="btn btn-warning ml-2" (click)="clearForm()"><i class="fas fa-times mr-2"></i> Limpar</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save mr-2"></i> Salvar
+          </button>
+          <button type="button" class="btn btn-warning ml-2" (click)="clearForm()">
+            <i class="fas fa-times mr-2"></i> Limpar
+          </button>
         </div>
       </form>
     </div>
@@ -59,8 +108,12 @@
             <td>{{ venda.quantidade }}</td>
             <td>{{ venda.valor }}</td>
             <td>
-              <button type="button" class="btn btn-secondary btn-sm" (click)="selectVenda(venda)"><i class="fas fa-edit"></i></button>
-              <button type="button" class="btn btn-danger btn-sm" (click)="deleteVenda(venda.id)"><i class="fas fa-trash-alt"></i></button>
+              <button type="button" class="btn btn-secondary btn-sm" (click)="selectVenda(venda)">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button type="button" class="btn btn-danger btn-sm" (click)="deleteVenda(venda.id)">
+                <i class="fas fa-trash-alt"></i>
+              </button>
             </td>
           </tr>
         </tbody>
