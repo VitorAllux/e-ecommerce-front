@@ -131,4 +131,14 @@ export class VendasComponent implements OnInit {
     this.getVendas();
   }
 
+  calculaValor(){
+    if(this.vendaForm.value.produto_id && this.vendaForm.value.quantidade){
+      let produto = this.produtos.find((prod: { id: any; }) => prod.id === this.vendaForm.value.produto_id)
+    
+      if(produto){
+        this.vendaForm.value.valor = (this.vendaForm.value.quantidade * produto.valor);
+        console.log(this.vendaForm.value.valor);
+      }
+    }
+  }
 }

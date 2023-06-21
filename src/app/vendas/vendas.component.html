@@ -54,25 +54,35 @@
       <form [formGroup]="vendaForm" (ngSubmit)="createOrUpdateVenda()" class="mb-4">
         <div class="form-group">
           <label for="cliente_id">ID do Cliente</label>
-          <input type="text" id="cliente_id" name="cliente_id" class="form-control" formControlName="cliente_id"
-            required />
+          <select class="form-select" id="filter_cliente" formControlName="cliente_id" required>
+            <option value="null" disabled></option>
+            <option *ngFor="let cliente of clientes" [ngValue]="cliente.id">
+              {{ cliente.nome }}
+            </option>
+          </select>
         </div>
 
         <div class="form-group">
           <label for="produto_id">ID do Produto</label>
-          <input type="text" id="produto_id" name="produto_id" class="form-control" formControlName="produto_id"
-            required />
+          <select class="form-control form-select" id="filter_produto" formControlName="produto_id" required
+            (change)="calculaValor()">
+            <option value="null" disabled></option>
+            <option *ngFor="let produto of produtos" [ngValue]="produto.id">
+              {{ produto.descricao }}
+            </option>
+          </select>
         </div>
 
         <div class="form-group">
           <label for="quantidade">Quantidade</label>
           <input type="number" id="quantidade" name="quantidade" class="form-control" formControlName="quantidade"
-            required />
+            required (change)="calculaValor()" />
         </div>
 
         <div class="form-group">
           <label for="valor">Valor</label>
-          <input type="number" id="valor" name="valor" class="form-control" formControlName="valor" required />
+          <input type="number" id="valor" name="valor" class="form-control" [(ngModel)]="this.vendaForm.value.valor"
+            formControlName="valor" required />
         </div>
 
         <div class="text-right">
